@@ -17,6 +17,15 @@ const pipeGap = 140;
 const pipeSpeed = 2;
 let frameCount = 0;
 
+const boxWidth = 280;
+const boxHeight = 180;
+const boxX = (canvas.width - boxWidth) / 2;
+const boxY = (canvas.height - boxHeight) / 2;
+const btnX = boxX + 40;
+const btnY = boxY + 115;
+const btnWidth = boxWidth - 80;
+const btnHeight = 35;
+
 document.addEventListener("keydown", function(e) {
     if (e.code === "Space") {
         if (!gameStarted) {
@@ -27,6 +36,23 @@ document.addEventListener("keydown", function(e) {
     }
     if (e.code === "Enter" && gameOver) {
         resetGame();
+    }
+});
+
+canvas.addEventListener("click", function(e) {
+    if (gameOver) {
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+
+        if (
+            mouseX >= btnX &&
+            mouseX <= btnX + btnWidth &&
+            mouseY >= btnY &&
+            mouseY <= btnY + btnHeight
+        ) {
+            resetGame();
+        }
     }
 });
 
@@ -119,20 +145,29 @@ function gameLoop() {
     }
 
     if (gameOver) {
-        ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+        ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        ctx.fillStyle = "red";
-        ctx.font = "34px Arial";
+        ctx.fillStyle = "#34495e";
+        ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
+        ctx.strokeStyle = "#fff";
+        ctx.lineWidth = 4;
+        ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
+
+        ctx.fillStyle = "#e74c3c";
+        ctx.font = "bold 28px Arial";
         ctx.textAlign = "center";
-        ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 50);
-        
+        ctx.fillText("GAME OVER", canvas.width / 2, boxY + 45);
+
         ctx.fillStyle = "white";
-        ctx.font = "24px Arial";
-        ctx.fillText("Score: " + score, canvas.width / 2, canvas.height / 2);
-        
         ctx.font = "20px Arial";
-        ctx.fillText("Press Enter to Restart", canvas.width / 2, canvas.height / 2 + 50);
+        ctx.fillText("Score: " + score, canvas.width / 2, boxY + 85);
+
+        ctx.fillStyle = "#2ecc71";
+        ctx.fillRect(btnX, btnY, btnWidth, btnHeight);
+        ctx.fillStyle = "white";
+        ctx.font = "bold 14px Arial";
+        ctx.fillText("CLICK OR ENTER TO REPLAY", canvas.width / 2, btnY + 22);
     }
 
     requestAnimationFrame(gameLoop);
