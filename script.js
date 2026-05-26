@@ -11,6 +11,8 @@ let score = 0;
 let gameOver = false;
 let gameStarted = false;
 
+let highScore = localStorage.getItem("flappyHighScore") ? parseInt(localStorage.getItem("flappyHighScore")) : 0;
+
 let pipes = [];
 const pipeWidth = 60;
 const pipeGap = 140;
@@ -18,11 +20,11 @@ const pipeSpeed = 2;
 let frameCount = 0;
 
 const boxWidth = 280;
-const boxHeight = 180;
+const boxHeight = 220;
 const boxX = (canvas.width - boxWidth) / 2;
 const boxY = (canvas.height - boxHeight) / 2;
 const btnX = boxX + 40;
-const btnY = boxY + 115;
+const btnY = boxY + 160;
 const btnWidth = boxWidth - 80;
 const btnHeight = 35;
 
@@ -112,6 +114,13 @@ function gameLoop() {
                 pipes.splice(i, 1);
             }
         }
+
+        if (gameOver) {
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem("flappyHighScore", highScore);
+            }
+        }
     }
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -161,7 +170,8 @@ function gameLoop() {
 
         ctx.fillStyle = "white";
         ctx.font = "20px Arial";
-        ctx.fillText("Score: " + score, canvas.width / 2, boxY + 85);
+        ctx.fillText("Score: " + score, canvas.width / 2, boxY + 95);
+        ctx.fillText("Best Score: " + highScore, canvas.width / 2, boxY + 130);
 
         ctx.fillStyle = "#2ecc71";
         ctx.fillRect(btnX, btnY, btnWidth, btnHeight);
