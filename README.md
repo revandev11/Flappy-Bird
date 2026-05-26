@@ -1,4 +1,4 @@
-# 🐦 Flappy Bird - Vanilla JS (Easy Version)
+# 🐦 Flappy Bird 
 
 This project is a simplified Flappy Bird game built entirely with fundamental web technologies and the **Canvas API**, without using any external libraries or CSS frameworks.
 
