@@ -7,6 +7,7 @@ let birdY = 250;
 const birdX = 50;
 const birdRadius = 15;
 const jump = -5.5;
+let score = 0;
 let gameOver = false;
 
 let pipes = [];
@@ -29,7 +30,8 @@ function spawnPipe() {
     pipes.push({
         x: canvas.width,
         top: topHeight,
-        bottom: canvas.height - topHeight - pipeGap
+        bottom: canvas.height - topHeight - pipeGap,
+        passed: false
     });
 }
 
@@ -56,6 +58,11 @@ function gameLoop() {
                 }
             }
 
+            if (!pipes[i].passed && pipes[i].x + pipeWidth < birdX) {
+                score += 5;
+                pipes[i].passed = true;
+            }
+
             if (pipes[i].x + pipeWidth < 0) {
                 pipes.splice(i, 1);
             }
@@ -76,11 +83,23 @@ function gameLoop() {
     ctx.fill();
     ctx.closePath();
 
+    ctx.fillStyle = "#fff";
+    ctx.font = "24px Arial";
+    ctx.textAlign = "left";
+    ctx.fillText("Score: " + score, 20, 40);
+
     if (gameOver) {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
         ctx.fillStyle = "red";
         ctx.font = "30px Arial";
         ctx.textAlign = "center";
-        ctx.fillText("YOU LOSE!", canvas.width / 2, canvas.height / 2);
+        ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 15);
+        
+        ctx.fillStyle = "white";
+        ctx.font = "20px Arial";
+        ctx.fillText("Final Score: " + score, canvas.width / 2, canvas.height / 2 + 25);
     } else {
         requestAnimationFrame(gameLoop);
     }
