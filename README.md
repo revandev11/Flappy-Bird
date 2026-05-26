@@ -1,48 +1,50 @@
-# 🐦 Flappy Bird 
+# Flappy Bird
 
-This project is a simplified Flappy Bird game built entirely with fundamental web technologies and the **Canvas API**, without using any external libraries or CSS frameworks.
+## 1. Game description
+Flappy Bird (Easy Version) is an advanced, browser-based arcade game built from scratch. The player controls a rotating bird navigating through dynamically generated pipes. This polished version includes a dynamic physics simulation, smooth procedural cloud backgrounds, custom Web Audio API sound synthesis, real-time audio muting, a game pause state, and local storage persistence for tracking high scores.
 
----
+## 2. Entity list
+* **Bird** - The main player entity drawn from an image asset (`image/bird.png`). It utilizes `birdY`, `velocity`, and `gravity` for real-time physics, along with a dynamic `birdRotation` angle mapped directly to its falling/jumping speed.
+* **Pipe** - Green obstacle pairs (`#2ecc71`) generated at fixed intervals. Each pipe contains an `x` coordinate, random `top` and `bottom` heights maintaining a precise `pipeGap`, and a `passed` boolean flag to trigger scoring.
+* **Cloud** - Procedurally generated background decorations that float across the screen at randomized heights, sizes, and speeds, creating a parallax depth effect.
+* **UI & Audio Engine** - A centralized rendering and event system managing interactive Canvas button hitboxes (Mute/Pause), custom text overlays, and web-synthesized game audio triggers (`jump`, `score`, `gameover`).
 
-## 🎮 Game Structure
+## 3. Excalidraw sketch placeholder
+<img width="1408" height="768" alt="WhatsApp Image 2026-05-26 at 5 58 51 PM" src="https://github.com/user-attachments/assets/5af855ad-e9af-4791-a895-c9f672a1cb30" />
 
-The game is designed with a Minimum Viable Product (MVP) approach and consists of 3 main screens:
+## 4. How to play
+* **Controls**:
+  * `SPACE` or **Mouse Click** - Flap wings / Jump up.
+  * `Key P` or **Canvas Pause Icon (▶/⏸)** - Toggle pause mode during gameplay.
+  * `Key M` or **Canvas Mute Icon (🔇/🔊)** - Toggle sound on/off.
+  * `ENTER` or **Clicking the REPLAY Button** - Restarts the game instantly when Game Over.
+* **Objective** - Navigate safely through the moving pipe corridors to accumulate points.
+* **Win condition** - Endless; score as many points as possible to secure a new personal record.
+* **Lose condition** - The game halts if the bird's collision radius hits the canvas ceiling, crashes into the floor, or intersects with any active pipe boundary.
 
-### 1. Start Screen
-* The game elements remain static upon loading.
-* Prompts the player with a centered text: **`PRESS SPACE TO START`**.
+## 5. Tech decisions
+* **Canvas-Driven UI & Input Mapping** - Built completely with Vanilla JavaScript, HTML5 Canvas, and CSS3. UI interactives like the Top-Right Mute/Pause buttons and the Game Over "REPLAY" button are computed directly inside the Canvas element using geometric bounding-box mouse coordinate checks (`getBoundingClientRect`).
+* **Web Audio API Synth Architecture** - Instead of loading large static audio files for simple alerts, the codebase utilizes modern browser `AudioContext` to programmatically spawn `OscillatorNode` soundwaves (Sine, Triangle, and Sawtooth frequencies) paired with `GainNode` volume envelopes. This ensures lag-free audio scheduling without execution hiccups.
+* **State Preservation** - High scores are safely updated and committed locally using `localStorage` APIs right at the moment of impact.
 
-### 2. Gameplay
-* **Bird:** Affected by gravitational pull, moving downward automatically and jumping upwards upon user input.
-* **Pipes:** Move from right to left with randomized gap placements.
-* **Score:** Increments by 1 every time the bird successfully passes through a pair of pipes.
+## 6. AI diary
+Check out the detailed step-by-step development process here: [AI_DIARY.md](AI_DIARY.md)
 
-### 3. Game Over
-* Triggers instantly when the bird collides with a pipe or the ground.
-* Displays **`GAME OVER`**, the final score (**`Score: X`**), and a prompt to retry: **`Press Enter`**.
+## 7. GitHub Pages link
+[Play the game](https://revandev11.github.io/Flappy-Bird/)
 
----
-
-## 🧠 Minimum Logic & Variables
-
-The core mechanics are driven by the following minimal variable set:
-* `gravity` — The constant downward force acting on the bird.
-* `velocity` — The current vertical speed/momentum of the bird.
-* `birdY` — The actual Y-coordinate position of the bird on the canvas.
-* `score` — The current count of passed obstacles.
-* `gameOver` — A boolean flag (`true`/`false`) tracking the active game state.
-
----
-
-## ⌨️ Controls
-
-* **`SPACE`:** * On Start Screen -> Launches the gameplay loop.
-  * During Gameplay -> Triggers a `jump` (reverses vertical velocity).
-* **`ENTER`:** * On Game Over Screen -> Triggers a `restart` (resets all variables and positions).
+## 8. Known bugs / what I'd fix next
+* **Mobile performance lag** - Minor frame drop stutters occasionally occur on mobile webviews during heavy cloud/pipe array redrawing loops or sound contextualization. Next fix: optimize touch event listeners and hardware-accelerate rendering scales.
+* **Click Listener Duplication** - Multiple click event handlers are registered directly within the execution loop, which could cause event piling over long sessions. Next fix: streamline all inputs into a single global window event manager.
 
 ---
 
-## 🚀 How to Run
+## Commit stages
+* `feat: player movement`
+* `feat: collission implemented`
+* `feat: add score/lose`
+* `feat: start & game over screen`
+* `feat: game restart`
+* `feat: high score`
 
-1. Open the `index.html` file directly in any modern web browser.
-2. Press the **`SPACE`** key to start playing!
+⭐ If you like this project, don't forget to give it a star!
