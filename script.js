@@ -9,6 +9,7 @@ const birdRadius = 15;
 const jump = -5.5;
 let score = 0;
 let gameOver = false;
+let gameStarted = false;
 
 let pipes = [];
 const pipeWidth = 60;
@@ -17,8 +18,15 @@ const pipeSpeed = 2;
 let frameCount = 0;
 
 document.addEventListener("keydown", function(e) {
-    if (e.code === "Space" && !gameOver) {
-        velocity = jump;
+    if (e.code === "Space") {
+        if (!gameStarted) {
+            gameStarted = true;
+        } else if (!gameOver) {
+            velocity = jump;
+        }
+    }
+    if (e.code === "Enter" && gameOver) {
+        resetGame();
     }
 });
 
@@ -35,8 +43,19 @@ function spawnPipe() {
     });
 }
 
+function resetGame() {
+    birdY = 250;
+    velocity = 0;
+    score = 0;
+    gameOver = false;
+    gameStarted = false;
+    pipes = [];
+    frameCount = 0;
+    spawnPipe();
+}
+
 function gameLoop() {
-    if (!gameOver) {
+    if (gameStarted && !gameOver) {
         velocity += gravity;
         birdY += velocity;
 
@@ -83,26 +102,40 @@ function gameLoop() {
     ctx.fill();
     ctx.closePath();
 
-    ctx.fillStyle = "#fff";
-    ctx.font = "24px Arial";
-    ctx.textAlign = "left";
-    ctx.fillText("Score: " + score, 20, 40);
+    if (!gameStarted) {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "white";
+        ctx.font = "28px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText("PRESS SPACE TO START", canvas.width / 2, canvas.height / 2);
+    }
+
+    if (gameStarted && !gameOver) {
+        ctx.fillStyle = "#fff";
+        ctx.font = "24px Arial";
+        ctx.textAlign = "left";
+        ctx.fillText("Score: " + score, 20, 40);
+    }
 
     if (gameOver) {
         ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         ctx.fillStyle = "red";
-        ctx.font = "30px Arial";
+        ctx.font = "34px Arial";
         ctx.textAlign = "center";
-        ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 15);
+        ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 50);
         
         ctx.fillStyle = "white";
+        ctx.font = "24px Arial";
+        ctx.fillText("Score: " + score, canvas.width / 2, canvas.height / 2);
+        
         ctx.font = "20px Arial";
-        ctx.fillText("Final Score: " + score, canvas.width / 2, canvas.height / 2 + 25);
-    } else {
-        requestAnimationFrame(gameLoop);
+        ctx.fillText("Press Enter to Restart", canvas.width / 2, canvas.height / 2 + 50);
     }
+
+    requestAnimationFrame(gameLoop);
 }
 
 spawnPipe();
